@@ -13,8 +13,8 @@ filePath
 EEG = pop_rejchan(EEG, 'elec', [1:size(EEG.data,1)],'threshold',5,'norm','on','measure','kurt');
 
 % Epoch Data
-EEG = pop_epoch( EEG, {  '1'  }, [-1  1], 'newname', 'EEProbe continuous data epochs', 'epochinfo', 'yes');
-EEG = pop_rmbase( EEG, [-1000  1000]);
+EEG = pop_epoch( EEG, {  '1'  }, [-1  0], 'newname', 'EEProbe continuous data epochs', 'epochinfo', 'yes');
+EEG = pop_rmbase( EEG, [-1000  0]);
 
 % Remove TMS Pulse Artefact + Reinterprolate for better Resampling
 EEG = pop_tesa_removedata( EEG, [-2 10] );
@@ -28,17 +28,17 @@ EEG = pop_jointprob(EEG,1,[1:size(EEG.data,1)],5,5,0,0);
 % EEG = pop_jointprob(EEG,1,[1:63] ,5,5,0,0,0,[],0);
 EEG = eeg_rejsuperpose( EEG, 1, 1, 1, 1, 1, 1, 1, 1);
 EEG.BadTr = unique([find(EEG.reject.rejjp==1) find(EEG.reject.rejmanual==1)]);
-% EEG = pop_rejepoch( EEG, EEG.BadTr ,0);
+EEG = pop_rejepoch( EEG, EEG.BadTr ,0);
 % EEG = pop_rejepoch( EEG, [3 4 6 25 26] ,0);
 
 % ICA component Removal First Pass
 % Preparation for FastICA First Pass
 % Remove TMS Pulse Artefact + Replace with Constant Amp. Data
-EEG = pop_tesa_removedata( EEG, [-2 10] );
+% EEG = pop_tesa_removedata( EEG, [-2 10] );
 EEG = pop_tesa_fastica( EEG, 'approach', 'symm', 'g', 'tanh', 'stabilization', 'off' );
 
 % ICA Component Selection
-EEG = pop_tesa_compselect( EEG,'compCheck','on','comps',9,'figSize','small','plotTimeX',[-200 500],'plotFreqX',[1 100],'tmsMuscle','on','tmsMuscleThresh',8,'tmsMuscleWin',[11 30],'tmsMuscleFeedback','off','blink','off','blinkThresh',2.5,'blinkElecs',{'Fp1','Fp2'},'blinkFeedback','off','move','off','moveThresh',2,'moveElecs',{'F7','F8'},'moveFeedback','off','muscle','off','muscleThresh',0.6,'muscleFreqWin',[30 100],'muscleFeedback','off','elecNoise','off','elecNoiseThresh',4,'elecNoiseFeedback','off' );
+EEG = pop_tesa_compselect( EEG,'compCheck','on','comps',9,'figSize','small','plotTimeX',[-200 0],'plotFreqX',[1 100],'tmsMuscle','on','tmsMuscleThresh',8,'tmsMuscleWin',[11 30],'tmsMuscleFeedback','off','blink','off','blinkThresh',2.5,'blinkElecs',{'Fp1','Fp2'},'blinkFeedback','off','move','off','moveThresh',2,'moveElecs',{'F7','F8'},'moveFeedback','off','muscle','off','muscleThresh',0.6,'muscleFreqWin',[30 100],'muscleFeedback','off','elecNoise','off','elecNoiseThresh',4,'elecNoiseFeedback','off' );
 
 % Remove TMS Pulse Artefact + Interprolate for Bandpass filter
 EEG = pop_tesa_removedata( EEG, [-2 15] );
