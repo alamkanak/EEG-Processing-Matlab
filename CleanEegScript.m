@@ -6,6 +6,6 @@ if isequal(file,0)
    disp('User selected Cancel');
 else
     disp(['User selected ', fullfile(path, file)]);
-    EEG = CleanPreStimulusEeg2(strcat(path, '/', file), 100)
+    EEG = CleanEeg(strcat(path, '/', file))
     pop_saveset(EEG, 'filename', 'clean-prestimulus.set', 'filepath', path);
 end

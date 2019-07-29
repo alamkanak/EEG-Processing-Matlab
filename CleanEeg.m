@@ -15,6 +15,12 @@ EEG = pop_rejchan(EEG, 'elec', [1:size(EEG.data,1)],'threshold',5,'norm','on','m
 EEG = pop_epoch( EEG, {  '1'  }, [-1  1], 'newname', 'EEProbe continuous data epochs', 'epochinfo', 'yes');
 EEG = pop_rmbase( EEG, [-1000  1000]);
 
+% Save "before" plot.
+figure
+pop_timtopo(EEG, [-1000 999], [NaN]);
+[path, ~, ~] = fileparts(filePath);
+saveas(gcf, strcat(path, '/', 'before.png'))
+
 % Remove TMS Pulse Artefact + Reinterprolate for better Resampling
 EEG = pop_tesa_removedata( EEG, [-2 10] );
 EEG = pop_tesa_interpdata( EEG, 'cubic', [1 1] );
@@ -37,7 +43,7 @@ EEG = pop_tesa_removedata( EEG, [-2 10] );
 EEG = pop_tesa_fastica( EEG, 'approach', 'symm', 'g', 'tanh', 'stabilization', 'off' );
 
 % ICA Component Selection
-EEG = pop_tesa_compselect( EEG,'compCheck','on','comps',9,'figSize','small','plotTimeX',[-200 500],'plotFreqX',[1 100],'tmsMuscle','on','tmsMuscleThresh',8,'tmsMuscleWin',[11 30],'tmsMuscleFeedback','off','blink','off','blinkThresh',2.5,'blinkElecs',{'Fp1','Fp2'},'blinkFeedback','off','move','off','moveThresh',2,'moveElecs',{'F7','F8'},'moveFeedback','off','muscle','off','muscleThresh',0.6,'muscleFreqWin',[30 100],'muscleFeedback','off','elecNoise','off','elecNoiseThresh',4,'elecNoiseFeedback','off' );
+EEG = pop_tesa_compselect( EEG,'compCheck','on','comps',9,'figSize','medium','plotTimeX',[-200 500],'plotFreqX',[1 100],'tmsMuscle','on','tmsMuscleThresh',8,'tmsMuscleWin',[11 30],'tmsMuscleFeedback','off','blink','off','blinkThresh',2.5,'blinkElecs',{'Fp1','Fp2'},'blinkFeedback','off','move','off','moveThresh',2,'moveElecs',{'F7','F8'},'moveFeedback','off','muscle','off','muscleThresh',0.6,'muscleFreqWin',[30 100],'muscleFeedback','off','elecNoise','off','elecNoiseThresh',4,'elecNoiseFeedback','off' );
 
 % Remove TMS Pulse Artefact + Interprolate for Bandpass filter
 EEG = pop_tesa_removedata( EEG, [-2 15] );
@@ -50,7 +56,7 @@ EEG = pop_tesa_filtbutter( EEG, 48, 52, 4, 'bandstop' );
 % Remove TMS Pulse Artefact + Replace with Constant Amp. Data
 EEG = pop_tesa_removedata( EEG, [-2 15] );
 EEG = pop_tesa_fastica( EEG, 'approach', 'symm', 'g', 'tanh', 'stabilization', 'off' );
-EEG = pop_tesa_compselect( EEG,'compCheck','on','comps',19,'figSize','small','plotTimeX',[-200 500],'plotFreqX',[1 100],'tmsMuscle','on','tmsMuscleThresh',8,'tmsMuscleWin',[11 30],'tmsMuscleFeedback','off','blink','on','blinkThresh',2.5,'blinkElecs',{'Fp1','Fp2'},'blinkFeedback','off','move','on','moveThresh',2,'moveElecs',{'F7','F8'},'moveFeedback','off','muscle','on','muscleThresh',0.6,'muscleFreqWin',[30 100],'muscleFeedback','off','elecNoise','on','elecNoiseThresh',4,'elecNoiseFeedback','off' );
+EEG = pop_tesa_compselect( EEG,'compCheck','on','comps',19,'figSize','medium','plotTimeX',[-200 500],'plotFreqX',[1 100],'tmsMuscle','on','tmsMuscleThresh',8,'tmsMuscleWin',[11 30],'tmsMuscleFeedback','off','blink','on','blinkThresh',2.5,'blinkElecs',{'Fp1','Fp2'},'blinkFeedback','off','move','on','moveThresh',2,'moveElecs',{'F7','F8'},'moveFeedback','off','muscle','on','muscleThresh',0.6,'muscleFreqWin',[30 100],'muscleFeedback','off','elecNoise','on','elecNoiseThresh',4,'elecNoiseFeedback','off' );
 
 % Interpolate Missing Data
 EEG = pop_tesa_interpdata( EEG, 'linear', [5 5] );
@@ -75,3 +81,8 @@ EEG = pop_tesa_tepextract( EEG, 'GMFA');
 EEG = pop_tesa_peakanalysis( EEG, 'ROI', 'positive', [13 30 60 190], [11 15;25 35;45 75;170 210], 'method', 'largest', 'samples', 5 );
 EEG = pop_tesa_peakanalysis( EEG, 'ROI', 'negative', [7 18 44 100 280], [5 9;15 21;35 53;85 115;250 310], 'method', 'largest', 'samples', 5 );
 EEG = pop_tesa_peakanalysis( EEG, 'GMFA', 'positive', [30 60 180], [20 40;45 75;170 210], 'method', 'largest', 'samples', 5 );
+
+% Save image file.
+figure
+pop_timtopo(EEG, [-1000 999], [NaN])
+saveas(gcf, strcat(path, '/', 'after.png'))
