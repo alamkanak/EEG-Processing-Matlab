@@ -1,7 +1,7 @@
-function EEG = CleanPreStimulusEeg2(filePath, lowPassCutOff)
+function EEG = CleanPreStimulusEeg3(filePath, lowPassCutOff)
     [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
     [EEG] = pop_loadeep_v4(filePath);
-    endTime = -20 % in milliseconds
+    endTime = 100 % in milliseconds
 
     % Remember channels to use later when interpolating bad channels
     [ALLEEG EEG] = eeg_store(ALLEEG, EEG, 1);
@@ -11,13 +11,17 @@ function EEG = CleanPreStimulusEeg2(filePath, lowPassCutOff)
 
     % Epoch data
     EEG = pop_epoch( EEG, {  '1'  }, [-1  endTime/1000], 'newname', 'EEProbe continuous data epochs', 'epochinfo', 'yes');
-    EEG = pop_rmbase( EEG, [-1000 endTime-1]);
+    EEG = pop_rmbase( EEG, [-1000 0]);
+    
+    % Replace pulse with constant amplitude
+    EEG = pop_tesa_removedata( EEG, [-2 80] );
+    EEG = pop_tesa_interpdata( EEG, 'linear', [-2 80] );
     
     % Save "before" plot.
     figure
     pop_timtopo(EEG, [-1000 endTime-1], [NaN]);
     [path, ~, ~] = fileparts(filePath);
-    saveas(gcf, strcat(path, '/', 'before.png'))
+    saveas(gcf, strcat(path, '/', '02-before.png'))
 
     % Resample
     EEG = pop_resample( EEG, 2048);
@@ -43,8 +47,10 @@ function EEG = CleanPreStimulusEeg2(filePath, lowPassCutOff)
     
     % Fast ICA #2
     EEG = pop_tesa_fastica( EEG, 'approach', 'symm', 'g', 'tanh', 'stabilization', 'off' );
-    EEG = pop_tesa_compselect( EEG,'compCheck','on','comps', 15, 'figSize', 'medium', 'plotTimeX', [-800 endTime-2],'plotFreqX',[1 100],'tmsMuscle','off','tmsMuscleThresh',8,'tmsMuscleWin',[11 30],'tmsMuscleFeedback','off','blink','on','blinkThresh',2.5,'blinkElecs',{'Fp1','Fp2'},'blinkFeedback','off','move','on','moveThresh',2,'moveElecs',{'F7','F8'},'moveFeedback','off','muscle','on','muscleThresh',0.6,'muscleFreqWin',[30 100],'muscleFeedback','off','elecNoise','on','elecNoiseThresh',4,'elecNoiseFeedback','off');
+    EEG = pop_tesa_compselect( EEG,'compCheck','on','comps', 15, 'figSize', 'medium', 'plotTimeX', [-1000 endTime-2],'plotFreqX',[1 100],'tmsMuscle','off','tmsMuscleThresh',8,'tmsMuscleWin',[11 30],'tmsMuscleFeedback','off','blink','on','blinkThresh',2.5,'blinkElecs',{'Fp1','Fp2'},'blinkFeedback','off','move','on','moveThresh',2,'moveElecs',{'F7','F8'},'moveFeedback','off','muscle','on','muscleThresh',0.6,'muscleFreqWin',[30 100],'muscleFeedback','off','elecNoise','on','elecNoiseThresh',4,'elecNoiseFeedback','off');
 
+    
+    
     % Interpolate missing/bad channels
     EEG = pop_interp(EEG, ALLEEG(1).chanlocs, 'spherical');
 
@@ -54,6 +60,6 @@ function EEG = CleanPreStimulusEeg2(filePath, lowPassCutOff)
     % Save image file.
     figure
     pop_timtopo(EEG, [-1000 endTime-1], [NaN])
-    saveas(gcf, strcat(path, '/', 'after.png'))
+    saveas(gcf, strcat(path, '/', '02-after.png'))
 end
 

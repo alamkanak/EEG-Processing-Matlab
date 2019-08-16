@@ -6,7 +6,7 @@ function EEG = CleanPreStimulusEeg(filePath, lowPassCutOff)
     [ALLEEG EEG] = eeg_store(ALLEEG, EEG, 1);
 
     % Reject channels
-    EEG = pop_rejchan(EEG, 'elec', [1:size(EEG.data,1)],'threshold',5,'norm','on','measure','kurt');
+    EEG = pop_rejchan(EEG, 'elec', [1:size(EEG.data,1)],'threshold', 5, 'norm', 'on', 'measure', 'kurt');
 
     % Epoch data
     EEG = pop_epoch( EEG, {  '1'  }, [-1  1], 'newname', 'EEProbe continuous data epochs', 'epochinfo', 'yes');
