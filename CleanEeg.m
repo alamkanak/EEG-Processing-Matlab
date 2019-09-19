@@ -74,6 +74,7 @@ EEG = pop_tesa_tepextract( EEG, 'ROI', 'elecs', {'Fp2','AF4','AF8','F2','F4','F6
 EEG = pop_tesa_tepextract( EEG, 'ROI', 'elecs', {'FC5','FC1','C3','CP5','CP1','FC3','C5','C1','CP3'}, 'tepName', 'LtM1' );
 EEG = pop_tesa_tepextract( EEG, 'ROI', 'elecs', {'FC6','FC2','C4','CP6','CP2','FC4','C6','C2','CP4'}, 'tepName', 'RtM1' );
 EEG = pop_tesa_tepextract( EEG, 'ROI', 'elecs', {'Fz','FCz','Cz','F1','FC1','C1','C2','FC2','F2'}, 'tepName', 'Central' );
+
 EEG = pop_tesa_tepextract( EEG, 'ROI', 'elecs', {'Cz'}, 'tepName', 'Cz' );
 EEG = pop_tesa_tepextract( EEG, 'GMFA');
 

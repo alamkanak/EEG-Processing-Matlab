@@ -1,4 +1,4 @@
-function EEG = CleanPreStimulusEeg4(filePath, lowPassCutOff)
+function EEG = CleanPreStimulusEeg5(filePath, lowPassCutOff)
     [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
     [EEG] = pop_loadeep_v4(filePath);
     endTime = 0 % in milliseconds
@@ -12,7 +12,6 @@ function EEG = CleanPreStimulusEeg4(filePath, lowPassCutOff)
     % Reject channels
     EEG = pop_rejchan(EEG, 'elec', [1:size(EEG.data, 1)], 'threshold', 5,'norm', 'on', 'measure', 'kurt');
 
-
     % Epoch data
     EEG = pop_epoch( EEG, {  '1'  }, [-1  1], 'newname', 'EEProbe continuous data epochs', 'epochinfo', 'yes');
     EEG = pop_rmbase( EEG, [-1000 0]);
@@ -21,39 +20,18 @@ function EEG = CleanPreStimulusEeg4(filePath, lowPassCutOff)
     figure
     pop_timtopo(EEG, [-1000 endTime-1], [NaN], 'Before ICA #1');
     [path, ~, ~] = fileparts(filePath);
-    saveas(gcf, strcat(path, '/', '04-before.png'))
+    saveas(gcf, strcat(path, '/', '05-before.png'))
     
     % Remove TMS Pulse Artefact + Reinterprolate for better Resampling
-    EEG = pop_tesa_removedata( EEG, [-2 10] );
-    EEG = pop_tesa_interpdata( EEG, 'cubic', [1 1] );
+    EEG = pop_tesa_removedata( EEG, [-2 400] );
+    EEG = pop_constant_data( EEG, [-2, 400] );
 
     % Resample
     EEG = pop_resample( EEG, 2048);
-    EEG = pop_tesa_removedata( EEG, [-2 10] );
-    EEG = pop_tesa_fastica( EEG, 'approach', 'symm', 'g', 'tanh', 'stabilization', 'off' );
-    
-    % Remove bad epochs
-%     try
-%         EEG = pop_jointprob(EEG, 1, [1:size(EEG.data,1)], 5, 5, 0, 0);
-%         EEG = eeg_rejsuperpose( EEG, 1, 1, 1, 1, 1, 1, 1, 1);
-%         EEG.BadTr = unique([find(EEG.reject.rejjp==1) find(EEG.reject.rejmanual==1)]);
-%         EEG = pop_rejepoch( EEG, EEG.BadTr, 0);
-%     catch
-%         uiwait(msgbox('Could not remove bad epochs', 'Warning', 'warn'));
-%     end
-    
-    % Fast ICA #1
-%     EEG = pop_tesa_fastica( EEG, 'approach', 'symm', 'g', 'tanh', 'stabilization', 'off' );
-%     EEG = pop_tesa_compselect( EEG, 'compCheck', 'on', 'comps', 9, 'figSize', 'medium','plotTimeX',[-200 500],'plotFreqX',[1 100],'tmsMuscle','off','tmsMuscleThresh',8,'tmsMuscleWin',[11 30],'tmsMuscleFeedback','off','blink','off','blinkThresh',2.5,'blinkElecs',{'Fp1','Fp2'},'blinkFeedback','off','move','off','moveThresh',2,'moveElecs',{'F7','F8'},'moveFeedback','off','muscle','off','muscleThresh',0.6,'muscleFreqWin',[30 100],'muscleFeedback','off','elecNoise','off','elecNoiseThresh',4,'elecNoiseFeedback','off' );
     
     % Apply filters
-    % EEG = pop_tesa_filtbutter( EEG, 1, 100, 4, 'bandpass' );
-    EEG = pop_tesa_removedata( EEG, [-2 15] );
-    EEG = pop_tesa_interpdata( EEG, 'cubic', [5 5] );
-    % EEG = pop_tesa_filtbutter( EEG, 1, lowPassCutOff, 4, 'bandpass' );
+    EEG = pop_tesa_filtbutter( EEG, 1, lowPassCutOff, 4, 'bandpass' );
     EEG = pop_tesa_filtbutter( EEG, 48, 52, 4, 'bandstop' );
-    figure
-    pop_timtopo(EEG, [-1000 endTime-1], [NaN], 'Filtered');
      
     % Fast ICA #2
     EEG = pop_tesa_fastica( EEG, 'approach', 'symm', 'g', 'tanh', 'stabilization', 'off' );
@@ -71,6 +49,6 @@ function EEG = CleanPreStimulusEeg4(filePath, lowPassCutOff)
     % Save image file.
     figure
     pop_timtopo(EEG, [-1000 endTime-1], [NaN], 'Final')
-    saveas(gcf, strcat(path, '/', '04-after.png'))
+    saveas(gcf, strcat(path, '/', '05-after.png'))
 end
 
