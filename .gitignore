@@ -34,5 +34,6 @@ octave-workspace
 
 # Project specific
 data/
+artist-results/
 
 # End of https://www.gitignore.io/api/matlab

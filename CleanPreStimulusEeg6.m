@@ -1,4 +1,4 @@
-function EEG = CleanPreStimulusEeg5(filePath, lowPassCutOff)
+function EEG = CleanPreStimulusEeg6(filePath, lowPassCutOff)
     [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
     [EEG] = pop_loadeep_v4(filePath);
     endTime = 0 % in milliseconds
@@ -14,13 +14,13 @@ function EEG = CleanPreStimulusEeg5(filePath, lowPassCutOff)
 
     % Epoch data
     EEG = pop_epoch( EEG, {  '1'  }, [-1  1], 'newname', 'EEProbe continuous data epochs', 'epochinfo', 'yes');
-    EEG = pop_rmbase( EEG, [-1000 0]);
+    EEG = pop_rmbase( EEG, [-1000 -5]);
     
     % Save "before" plot.
     figure
     pop_timtopo(EEG, [-1000 endTime-1], [NaN], 'Before ICA #1');
     [path, ~, ~] = fileparts(filePath);
-    saveas(gcf, strcat(path, '/', '05-before.png'))
+    saveas(gcf, strcat(path, '/', '06-before.png'))
     
     % Remove TMS Pulse Artefact + Reinterprolate for better Resampling
     EEG = pop_tesa_removedata( EEG, [-2 400] );
@@ -28,10 +28,6 @@ function EEG = CleanPreStimulusEeg5(filePath, lowPassCutOff)
 
     % Resample
     EEG = pop_resample( EEG, 2048);
-    
-    % Apply filters
-    EEG = pop_tesa_filtbutter( EEG, 1, lowPassCutOff, 4, 'bandpass' );
-    EEG = pop_tesa_filtbutter( EEG, 48, 52, 4, 'bandstop' );
      
     % Fast ICA #2
     EEG = pop_tesa_fastica( EEG, 'approach', 'symm', 'g', 'tanh', 'stabilization', 'off' );
@@ -43,11 +39,11 @@ function EEG = CleanPreStimulusEeg5(filePath, lowPassCutOff)
     % Rereference to average.
     EEG = pop_reref(EEG, []);
     
-    % Epoch prestimulus
-    % EEG = pop_epoch( EEG, {  '1'  }, [-1  endTime/1000], 'newname', 'EEProbe continuous data epochs', 'epochinfo', 'yes');
-    
     % Save image file.
     figure
     pop_timtopo(EEG, [-1000 endTime-1], [NaN], 'Final')
-    saveas(gcf, strcat(path, '/', '05-after.png'))
+    saveas(gcf, strcat(path, '/', '06-after.png'))
+    
+    % Plot stacked channels.
+    pop_eegplot( EEG, 1, 1, 1);
 end
