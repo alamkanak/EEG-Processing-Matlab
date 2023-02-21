@@ -1,0 +1,86 @@
+cff-version: 1.2.0
+title: >-
+  Differences in Power Spectral Densities and Phase
+  Quantities Due to Processing of EEG Signals
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Raquib Ul
+    family-names: Alam
+    email: raquibul.alam@sydney.edu.au
+    affiliation: >-
+      School of Electrical and Information Engineering,
+      University of Sydney
+    orcid: 'https://orcid.org/0000-0001-8243-255X'
+  - given-names: Haifeng
+    family-names: Zhao
+    email: haifeng.zhao@sydney.edu.au
+    affiliation: 'School of Biomedical Engineering, University of Sydney'
+  - given-names: Andrew
+    family-names: Goodwin
+    email: a.goodwin@sydney.edu.au
+    affiliation: 'School of Biomedical Engineering, University of Sydney'
+  - given-names: Omid
+    family-names: Kavehei
+    email: omid.kavehei@sydney.edu.au
+    affiliation: 'School of Biomedical Engineering, University of Sydney'
+    orcid: 'https://orcid.org/0000-0002-2753-5553'
+  - given-names: Alistair
+    family-names: McEwan
+    email: alistair.mcewan@sydney.edu.au
+    affiliation: 'School of Biomedical Engineering, University of Sydney'
+    orcid: 'https://orcid.org/0000-0001-7597-6372'
+identifiers:
+  - type: doi
+    value: 10.3390/s20216285
+abstract: >-
+  There has been a growing interest in computational
+  electroencephalogram (EEG) signal processing in a diverse
+  set of domains, such as cortical excitability analysis,
+  event-related synchronization, or desynchronization
+  analysis. In recent years, several inconsistencies were
+  found across different EEG studies, which authors often
+  attributed to methodological differences. However, the
+  assessment of such discrepancies is deeply underexplored.
+  It is currently unknown if methodological differences can
+  fully explain emerging differences and the nature of these
+  differences. This study aims to contrast widely used
+  methodological approaches in EEG processing and compare
+  their effects on the outcome variables. To this end, two
+  publicly available datasets were collected, each having
+  unique traits so as to validate the results in two
+  different EEG territories. The first dataset included
+  signals with event-related potentials (visual stimulation)
+  from 45 subjects. The second dataset included resting
+  state EEG signals from 16 subjects. Five EEG processing
+  steps, involved in the computation of power and phase
+  quantities of EEG frequency bands, were explored in this
+  study: artifact removal choices (with and without artifact
+  removal), EEG signal transformation choices (raw EEG
+  channels, Hjorth transformed channels, and averaged
+  channels across primary motor cortex), filtering
+  algorithms (Butterworth filter and Blackman–Harris
+  window), EEG time window choices (−750 ms to 0 ms and −250
+  ms to 0 ms), and power spectral density (PSD) estimation
+  algorithms (Welch’s method, Fast Fourier Transform, and
+  Burg’s method). Powers and phases estimated by carrying
+  out variations of these five methods were analyzed
+  statistically for all subjects. The results indicated that
+  the choices in EEG transformation and time-window can
+  strongly affect the PSD quantities in a variety of ways.
+  Additionally, EEG transformation and filter choices can
+  influence phase quantities significantly. These results
+  raise the need for a consistent and standard EEG
+  processing pipeline for computational EEG studies.
+  Consistency of signal processing methods cannot only help
+  produce comparable results and reproducible research, but
+  also pave the way for federated machine learning methods,
+  e.g., where model parameters rather than data are shared.
+keywords:
+  - electroencephalography
+  - spectral analysis
+  - visual evoked potentials
+  - pipelines
+  - correlations
